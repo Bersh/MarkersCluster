@@ -3,6 +3,7 @@ package ru.startandroid.mapsapi.demo;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -16,6 +17,8 @@ import ru.startandroid.mapsapi.R;
 import ru.startandroid.mapsapi.cluster.MarkersClusterizer;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Demo activity. It'll show map, generate some markers and run clustering
@@ -26,6 +29,7 @@ public class MainActivity extends FragmentActivity {
     private float oldZoom = 0;
     private GoogleMap map;
     private static final int INTERVAL = 25;
+    private LinkedHashMap<Point, ArrayList<MarkerOptions>> clusters;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,13 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 if (cameraPosition.zoom != oldZoom) {
-                    MarkersClusterizer.clusterMarkers(map, markers, INTERVAL);
+                    try {
+                        clusters = MarkersClusterizer.clusterMarkers(map, markers, INTERVAL);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    }
                 }
                 oldZoom = cameraPosition.zoom;
             }

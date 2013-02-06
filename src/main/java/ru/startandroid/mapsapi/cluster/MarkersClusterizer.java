@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Utility class for cluster markers
@@ -22,8 +23,9 @@ public class MarkersClusterizer {
      * @param googleMap target {@link com.google.android.gms.maps.GoogleMap} instance
      * @param markers list of all {@link com.google.android.gms.maps.model.MarkerOptions}
      * @param i interval between two markers
+     * @return map of clusters. You can use it to find all markers in given cluster.
      */
-    public static void clusterMarkers(GoogleMap googleMap, ArrayList<MarkerOptions> markers, int i) {
+    public static LinkedHashMap<Point, ArrayList<MarkerOptions>> clusterMarkers(GoogleMap googleMap, ArrayList<MarkerOptions> markers, int i) throws ExecutionException, InterruptedException {
         map = googleMap;
         interval = i;
         Projection projection = map.getProjection();
@@ -36,6 +38,7 @@ public class MarkersClusterizer {
 
         CheckMarkersTask checkMarkersTask = new CheckMarkersTask();
         checkMarkersTask.execute(points);
+        return checkMarkersTask.get();
     }
 
     private static class CheckMarkersTask extends AsyncTask<LinkedHashMap<MarkerOptions, Point>, Void, LinkedHashMap<Point, ArrayList<MarkerOptions>>> {
