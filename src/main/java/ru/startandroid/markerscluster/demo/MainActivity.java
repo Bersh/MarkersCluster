@@ -1,5 +1,5 @@
 
-package ru.startandroid.mapsapi.demo;
+package ru.startandroid.markerscluster.demo;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,14 +7,15 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import ru.startandroid.mapsapi.R;
-import ru.startandroid.mapsapi.cluster.MarkersClusterizer;
+import ru.startandroid.markerscluster.R;
+import ru.startandroid.markerscluster.cluster.MarkersClusterizer;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -30,6 +31,11 @@ public class MainActivity extends FragmentActivity {
     private GoogleMap map;
     private static final int INTERVAL = 25;
     private LinkedHashMap<Point, ArrayList<MarkerOptions>> clusters;
+    private final double initLat1 = 40.462740;
+    private final double initLng1 = 30.039572;
+    private final double initLat2 = 48.462740;
+    private final double initLng2 = 35.039572;
+    private static final int MAP_ZOOM_LEVEL = 4;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,8 @@ public class MainActivity extends FragmentActivity {
 
         map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
         map.getUiSettings().setMyLocationButtonEnabled(true);
+        LatLng position = new LatLng(initLat2, initLng2);
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM_LEVEL));
         map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -48,9 +56,9 @@ public class MainActivity extends FragmentActivity {
                     try {
                         clusters = MarkersClusterizer.clusterMarkers(map, markers, INTERVAL);
                     } catch (ExecutionException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        e.printStackTrace();
                     } catch (InterruptedException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        e.printStackTrace();
                     }
                 }
                 oldZoom = cameraPosition.zoom;
@@ -74,15 +82,15 @@ public class MainActivity extends FragmentActivity {
         double initLat;
         double initLng;
 
-        initLat = 40.462740;
-        initLng = 30.039572;
+        initLat = initLat1;
+        initLng = initLng1;
         for (float i = 0; i < 2; i += 0.2) {
             LatLng pos = new LatLng(initLat + i, initLng + i);
             markers.add(new MarkerOptions().position(pos).icon(BitmapDescriptorFactory.fromBitmap(markerImage)));
         }
 
-        initLat = 48.462740;
-        initLng = 35.039572;
+        initLat = initLat2;
+        initLng = initLng2;
         for (float i = 0; i < 2; i += 0.2) {
             LatLng pos = new LatLng(initLat + i, initLng);
             markers.add(new MarkerOptions().position(pos).icon(BitmapDescriptorFactory.fromBitmap(markerImage)));

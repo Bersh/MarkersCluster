@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="ru.startandroid.mapsapi"
+	package="ru.startandroid.markerscluster"
 	android:versionCode="1"
 	android:versionName="1.0" >
 
@@ -16,7 +16,7 @@
 
 
     <permission
-            android:name="ru.startandroid.mapsapi.permission.MAPS_RECEIVE"
+            android:name="ru.startandroid.markerscluster.permission.MAPS_RECEIVE"
             android:protectionLevel="signature"/>
     <uses-permission android:name="com.example.mapdemo.permission.MAPS_RECEIVE"/>
 
@@ -43,7 +43,7 @@
 
         <meta-data
                 android:name="com.google.android.maps.v2.API_KEY"
-                android:value="your_api_key_here"/>
+                android:value="AIzaSyAt58jxZiZUyjb88j0a-beoO4agvMgyUsc"/>
 	</application>
 
 

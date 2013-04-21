@@ -1,4 +1,4 @@
-package ru.startandroid.mapsapi.cluster;
+package ru.startandroid.markerscluster.cluster;
 
 
 import android.graphics.Point;
@@ -20,9 +20,10 @@ public class MarkersClusterizer {
 
     /**
      * This method will clusterize markers and draw it on the given map instance
+     *
      * @param googleMap target {@link com.google.android.gms.maps.GoogleMap} instance
-     * @param markers list of all {@link com.google.android.gms.maps.model.MarkerOptions}
-     * @param i interval between two markers
+     * @param markers   list of all {@link com.google.android.gms.maps.model.MarkerOptions}
+     * @param i         interval between two markers
      * @return map of clusters. You can use it to find all markers in given cluster.
      */
     public static LinkedHashMap<Point, ArrayList<MarkerOptions>> clusterMarkers(GoogleMap googleMap, ArrayList<MarkerOptions> markers, int i) throws ExecutionException, InterruptedException {
