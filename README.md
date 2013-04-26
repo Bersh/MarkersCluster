@@ -16,4 +16,4 @@ Zoom out:<br/>
 ![Zoom out](http://s018.radikal.ru/i519/1304/0e/d7f32f25bea0.jpg)
 
 More zoom out:<br/>
-![More zoom out](http://s004.radikal.ru/i207/1304/f2/afeb3aaf239d.jpg)
+![More zoom out](http://s017.radikal.ru/i401/1304/7d/ed9816298745.jpg)
