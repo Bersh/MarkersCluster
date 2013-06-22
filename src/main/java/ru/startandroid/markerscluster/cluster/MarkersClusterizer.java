@@ -12,20 +12,35 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Utility class for cluster markers
+ * Utility class for clustering markers.
+ * Add it to your project
  */
 public class MarkersClusterizer {
     private static GoogleMap map;
     private static int interval;
+    private static final int DEFAULT_INTERVAL = 25;
+
+    /**
+     * This method will clusterize markers and draw it on the given map instance.
+     * Used default value for interval
+     *
+     * @param googleMap target {@link com.google.android.gms.maps.GoogleMap} instance
+     * @param markers   list of all {@link com.google.android.gms.maps.model.MarkerOptions}
+     * @return map of clusters. You can use it to find all markers in given cluster.
+     */
+    public static LinkedHashMap<Point, ArrayList<MarkerOptions>> clusterMarkers(GoogleMap googleMap, ArrayList<MarkerOptions> markers) throws ExecutionException, InterruptedException {
+        return clusterMarkers(googleMap, markers, DEFAULT_INTERVAL);
+    }
 
     /**
      * This method will clusterize markers and draw it on the given map instance
      *
      * @param googleMap target {@link com.google.android.gms.maps.GoogleMap} instance
      * @param markers   list of all {@link com.google.android.gms.maps.model.MarkerOptions}
-     * @param i         interval between two markers
+     * @param i         interval between two markers (in pixels)
      * @return map of clusters. You can use it to find all markers in given cluster.
      */
+    @SuppressWarnings("unchecked")
     public static LinkedHashMap<Point, ArrayList<MarkerOptions>> clusterMarkers(GoogleMap googleMap, ArrayList<MarkerOptions> markers, int i) throws ExecutionException, InterruptedException {
         map = googleMap;
         interval = i;
@@ -52,18 +67,16 @@ public class MarkersClusterizer {
         protected LinkedHashMap<Point, ArrayList<MarkerOptions>> doInBackground(LinkedHashMap<MarkerOptions, Point>... params) {
             LinkedHashMap<Point, ArrayList<MarkerOptions>> clusters = new LinkedHashMap<Point, ArrayList<MarkerOptions>>();
             LinkedHashMap<MarkerOptions, Point> points = params[0];
-            for (MarkerOptions markerOptions : points.keySet()) {
+            for (MarkerOptions markerOptions : points.keySet()) { //go thru all markers
                 Point point = points.get(markerOptions);
-                double minDistance = -1;
-                Point nearestPoint = null;
+                double minDistance = -1; //Currently found min distance. This need for finding nearest point.
+                Point nearestPoint = null; //Currently found nearest point
                 double currentDistance;
-                for (Point existingPoint : clusters.keySet()) {
+                for (Point existingPoint : clusters.keySet()) {  //try to find existing cluster for current marker
                     currentDistance = findDistance(point.x, point.y, existingPoint.x, existingPoint.y);
-                    if (currentDistance <= interval) {
-                        if ((currentDistance < minDistance) || (minDistance == -1)) {
-                            minDistance = currentDistance;
-                            nearestPoint = existingPoint;
-                        }
+                    if ((currentDistance <= interval) && ((currentDistance < minDistance) || (minDistance == -1))) {
+                        minDistance = currentDistance;
+                        nearestPoint = existingPoint;
                     }
                 }
 
@@ -83,9 +96,11 @@ public class MarkersClusterizer {
             for (Point point : clusters.keySet()) {
                 ArrayList<MarkerOptions> markersForPoint = clusters.get(point);
                 MarkerOptions mainMarker = markersForPoint.get(0);
-                if (markersForPoint.size() > 1) {
-                    mainMarker.title(Integer.toString(markersForPoint.size()));
+                int clusterSize = markersForPoint.size();
+                if (clusterSize > 1) {
+                    mainMarker.title(Integer.toString(clusterSize));
                 }
+
                 map.addMarker(mainMarker);
             }
         }
