@@ -1,3 +1,7 @@
+##Deprecated
+Please use `Google Maps Android Marker Clustering Utility` https://developers.google.com/maps/documentation/android/utility/marker-clustering
+
+
 MarkersCluster
 ==============
 
